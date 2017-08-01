@@ -1,12 +1,17 @@
 """TO-DO: Write a description of what this XBlock is."""
 
 import pkg_resources
-
+import logging
 from xblock.core import XBlock
 from xblock.fields import Scope, Integer, String, Float, List, Boolean, ScopeIds
 from xblock.fragment import Fragment
+from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 from xblockutils.settings import XBlockWithSettingsMixin
+
+loader = ResourceLoader(__name__)
+logger = logging.getLogger(__name__)
+
 
 class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     """
@@ -63,9 +68,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         Render a form for editing this XBlock
         """
         frag = Fragment()
-        context = {'fields': [],
-                    'xblock_list': self.xblock_list,
-                  }
+        context = {'fields': []}
         # Build a list of all the fields that can be edited:
         for field_name in self.editable_fields:
             field = self.fields[field_name]
