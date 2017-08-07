@@ -89,7 +89,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
          user = User.objects.get(id=4)
          badge_class = badge_service.get_badge_class(
 
-             slug='example-issuer', issuing_component='my_org__award_block',
+             slug='test-issuer', issuing_component='my_org__award_block',
              description="A Shiny badge, given to anyone who finds it!",
              display_name='TestBadge',
              criteria="Visit a page with an award block.",
@@ -110,25 +110,24 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The primary view of the BadgerXBlock, shown to students
         when viewing courses.
         """
-        print "-*-------------------"
+        print "-*---------------hjhjhj----"
         badge_service = self.runtime.service(self, 'badging')
         user_service = self.runtime.service(self, 'user')
         print badge_service, user_service
-        html = self.resource_string("static/html/badger.html")
-        frag = Fragment(html.format(self=self))
-        frag.add_css(self.resource_string("static/css/badger.css"))
-        frag.add_javascript(self.resource_string("static/js/src/badger.js"))
-        frag.initialize_js('BadgerXBlock', {
-            'pass_mark': self.pass_mark,
-            'section_title': self.section_title,
-            'award_message': self.award_message,
-            'motivation_message': self.motivation_message
-        })
-        return frag
-        # if user_service and badge_service:
-        #     user = User.objects.get(id=4)
-        #     self.award_badge(badge_service)
-        # return Fragment(u"<div><p>You just earned a badge!</p></div>")
+        # html = self.resource_string("static/html/badger.html")
+        # frag = Fragment(html.format(self=self))
+        # frag.add_css(self.resource_string("static/css/badger.css"))
+        # frag.add_javascript(self.resource_string("static/js/src/badger.js"))
+        # frag.initialize_js('BadgerXBlock', {
+        #     'pass_mark': self.pass_mark,
+        #     'section_title': self.section_title,
+        #     'award_message': self.award_message,
+        #     'motivation_message': self.motivation_message
+        # })
+        # return frag
+        if user_service and badge_service:
+            self.award_badge(badge_service)
+        return Fragment(u"<div><p>You just earned a badge!</p></div>")
 
 
     def studio_view(self, context):

@@ -11,7 +11,8 @@ function BadgerXBlock(runtime, element, data) {
         var b = JSON.stringify(data);
         var section_scores = data['section_scores'];
         var this_section = section_scores[String(section_title)];
-        console.log('hi')
+        console.log(section_scores);
+        console.log(this_section);
         if ( parseFloat(this_section) > pass_mark) {
             alert(award_message)
         }
