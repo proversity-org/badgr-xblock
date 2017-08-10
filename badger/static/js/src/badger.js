@@ -1,7 +1,7 @@
 /* Javascript for BadgerXBlock. */
 function BadgerXBlock(runtime, element, data) {
 
-    var my_url = '/api/grades/v0/course_grade/course-v1:edX+DemoX+Demo_Course/users/?username=staff'
+    var my_url = '/api/grades/v0/course_grade/course-v1:edX+DemoX+Demo_Course/users/'
     var section_title = data.section_title;
     var pass_mark = data.pass_mark;
     var award_message = data.award_message;

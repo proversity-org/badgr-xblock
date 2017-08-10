@@ -30,6 +30,34 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         default="Badger"
     )
 
+    badge_class_name = String(
+        display_name="Badge Class",
+        help="This is the name of the specifi badge class used in this graded subsection.",
+        scope=Scope.settings,
+        default="NewBadgeClass"
+    )
+
+    badge_slug = String(
+        display_name="Badge slug",
+        help="must be lower case unique name.",
+        scope=Scope.settings,
+        default="test-badge"
+    )
+
+    image_url = String(
+        display_name="Image url",
+        help="The url for the badge image located in static files",
+        scope=Scope.settings,
+        default="/static/my-badge"
+    )
+
+    criteria = String(
+        display_name="Criteria",
+        help="must be lower case unique name.",
+        scope=Scope.settings,
+        default="test-badge"
+    )
+
     section_title = String(
         display_name="Section title",
         help="See the display name of this section",
@@ -75,7 +103,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help='Message the user will see if they do not quailify for a badge'
     )
 
-    editable_fields = ('display_name', 'pass_mark', 'section_title', 'award_message', 'motivation_message', 'single_activity', 'activity_title',)
+    editable_fields = ('display_name', 'badge_class_name', 'pass_mark', 'section_title', 'award_message', 'motivation_message', 'single_activity', 'activity_title',)
     show_in_read_only_mode = True
 
     def resource_string(self, path):
@@ -87,8 +115,6 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     def award_badge(self, badge_service):
         user_service = self.runtime.service(self, 'user')
-        #user = user_service.get_current_user(id=4)
-        #print "USSER", user.full_name
         badge_class = badge_service.get_badge_class(
             slug='general_award', issuing_component='my_org__award_block',
             description="A Shiny badge, given to anyone who finds it!",
@@ -104,35 +130,54 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             # Badge image should be a square PNG file less than 250KB in size.
         )
         # Award the badge.
-        print "JAJAJAJAJA"
-        if not badge_class.get_for_user(User.objects.get(username='staff')):
-            print "I am here"
-            badge_class.award(User.objects.get(username='staff'))
+        #if not badge_class.get_for_user(self.runtime.get_real_user(self.runtime.anonymous_student_id)):
+        print "EEEUUUUU"
+        print self.xblock_mongodb_xmoduledb
+        badge_class.award(self.runtime.get_real_user(self.runtime.anonymous_student_id))
 
+    def award_badge(self, badge_service):
+        
+        badge_class = badge_service.get_badge_class(
+            slug=self.badge_slug, issuing_component='my_org__award_block',
+            description=self.description,
+            criteria=self.criteria,
+            display_name=self.badge_name,
+            course_id=self.runtime.course_id,
+            image_file_handle=self.image_url,
+            create=True
+        )
+        # Award the badge.
+        #if not badge_class.get_for_user(self.runtime.get_real_user(self.runtime.anonymous_student_id)):
+    
+        badge_class.award(self.runtime.get_real_user(self.runtime.anonymous_student_id))
+
+    def handle_image_upload(self):
+
+
+        pass
 
     def student_view(self, context=None):
         """
         The primary view of the BadgerXBlock, shown to students
         when viewing courses.
         """
-        print "-*---------------hjhjhj----"
         badge_service = self.runtime.service(self, 'badging')
         user_service = self.runtime.service(self, 'user')
-        print badge_service, user_service
-        # html = self.resource_string("static/html/badger.html")
-        # frag = Fragment(html.format(self=self))
-        # frag.add_css(self.resource_string("static/css/badger.css"))
-        # frag.add_javascript(self.resource_string("static/js/src/badger.js"))
-        # frag.initialize_js('BadgerXBlock', {
-        #     'pass_mark': self.pass_mark,
-        #     'section_title': self.section_title,
-        #     'award_message': self.award_message,
-        #     'motivation_message': self.motivation_message
-        # })
-        # return frag
+        html = self.resource_string("static/html/badger.html")
+        frag = Fragment(html.format(self=self))
+        frag.add_css(self.resource_string("static/css/badger.css"))
+        frag.add_javascript(self.resource_string("static/js/src/badger.js"))
+        frag.initialize_js('BadgerXBlock', {
+            'pass_mark': self.pass_mark,
+            'section_title': self.section_title,
+            'award_message': self.award_message,
+            'motivation_message': self.motivation_message
+        })
+        
         if user_service and badge_service:
+            print "Hii"
             self.award_badge(badge_service)
-        return Fragment(u"<div><p>You just earned a badge!</p></div>")
+        return frag
 
 
     def studio_view(self, context):
