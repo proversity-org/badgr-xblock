@@ -86,23 +86,28 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     # TO-DO: change this view to display your data your own way.
 
     def award_badge(self, badge_service):
-         user = User.objects.get(id=4)
-         badge_class = badge_service.get_badge_class(
-
-             slug='test-issuer', issuing_component='my_org__award_block',
-             description="A Shiny badge, given to anyone who finds it!",
-             display_name='TestBadge',
-             criteria="Visit a page with an award block.",
-             # This attribute not available in all runtimes,
-             # but if we have both of these services, it's a safe bet we're in the LMS.
-             course_id=self.runtime.course_id,
-             # The path to this file should be somewhere relative to your XBlock's package.
-             # It should be a square PNG file less than 250KB in size.
-             image_file_handle=pkg_resources.resource_stream(__name__, 'badges_images/coffee.jpg')
-         )
-         # Award the badge.
-         if not badge_class.get_for_user(user):
-             badge_class.award(user)
+        user_service = self.runtime.service(self, 'user')
+        #user = user_service.get_current_user(id=4)
+        #print "USSER", user.full_name
+        badge_class = badge_service.get_badge_class(
+            slug='general_award', issuing_component='my_org__award_block',
+            description="A Shiny badge, given to anyone who finds it!",
+            criteria="Visit a page with an award block.",
+            display_name='lid',
+            # This attribute not available in all runtimes,
+            # but if we have both of these services, it's a safe bet we're in the LMS.
+            course_id=self.runtime.course_id,
+            # The path to this file should be somewhere relative to your XBlock's package.
+            # It should be a square PNG file less than 250KB in size.
+            image_file_handle=pkg_resources.resource_stream(__name__, 'badges_images/coffee.png'),
+            create=True
+            # Badge image should be a square PNG file less than 250KB in size.
+        )
+        # Award the badge.
+        print "JAJAJAJAJA"
+        if not badge_class.get_for_user(User.objects.get(username='staff')):
+            print "I am here"
+            badge_class.award(User.objects.get(username='staff'))
 
 
     def student_view(self, context=None):
