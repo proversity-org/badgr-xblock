@@ -53,9 +53,16 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     criteria = String(
         display_name="Criteria",
-        help="must be lower case unique name.",
+        help="How does one earn this badge?",
         scope=Scope.settings,
-        default="test-badge"
+        default="Visit a page with an award block."
+    )
+
+    description = String(
+        display_name="Description",
+        help="What is this badge",
+        scope=Scope.settings,
+        default="A Shiny badge, given to anyone who finds it!"
     )
 
     section_title = String(
@@ -98,12 +105,13 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     )
 
     motivation_message = String(
+        display_name='Motivational message',
         default = 'Keep trying and learning, never give up.',
         scope=Scope.settings,
         help='Message the user will see if they do not quailify for a badge'
     )
 
-    editable_fields = ('display_name', 'badge_class_name', 'pass_mark', 'section_title', 'award_message', 'motivation_message', 'single_activity', 'activity_title',)
+    editable_fields = ('display_name', 'badge_class_name', 'badge_slug', 'image_url', 'criteria', 'description', 'pass_mark', 'section_title', 'award_message', 'motivation_message', 'single_activity', 'activity_title',)
     show_in_read_only_mode = True
 
     def resource_string(self, path):
@@ -135,13 +143,13 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         print self.xblock_mongodb_xmoduledb
         badge_class.award(self.runtime.get_real_user(self.runtime.anonymous_student_id))
 
-    def award_badge(self, badge_service):
+    def new_award_badge(self, badge_service):
         
         badge_class = badge_service.get_badge_class(
             slug=self.badge_slug, issuing_component='my_org__award_block',
             description=self.description,
             criteria=self.criteria,
-            display_name=self.badge_name,
+            display_name=self.badge_class_name,
             course_id=self.runtime.course_id,
             image_file_handle=self.image_url,
             create=True
