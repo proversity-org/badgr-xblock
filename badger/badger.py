@@ -153,7 +153,10 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         
         badge_class = badge_service.get_badge_class(
            slug=self.badge_slug, issuing_component=self.issuer_slug,
-            course_id=self.runtime.course_id
+            course_id=self.runtime.course_id,
+            display_name=self.display_name,
+            description="Testing new badgr server",
+            criteria="Just testing 21 August",
         )
         # /asset-v1:edX+DemoX+Demo_Course+type@asset+block@lid_test.png
         # Award the badge.
@@ -168,12 +171,14 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         badge_service = self.runtime.service(self, 'badging')
         user_service = self.runtime.service(self, 'user')
+        #user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
+        
         html = self.resource_string("static/html/badger.html")
         frag = Fragment(html.format(self=self))
         frag.add_css(self.resource_string("static/css/badger.css"))
         frag.add_javascript(self.resource_string("static/js/src/badger.js"))
         frag.initialize_js('BadgerXBlock', {
-            'user': user.username,
+            #'user': user.username,
             'pass_mark': self.pass_mark,
             'section_title': self.section_title,
             'award_message': self.award_message,
