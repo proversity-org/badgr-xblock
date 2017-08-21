@@ -3,11 +3,13 @@ function BadgerXBlock(runtime, element, data) {
 
     var my_url = '/api/grades/v0/course_grade/course-v1:edX+DemoX+Demo_Course/users/'
     var user = data.user
-    var badger_api = 'api/badges/v1/assertions/user/' + user
+    var badger_api = 'http://badgr.proversity.org/v1/issuer/issuers/proversity/badges/congeniality/assertions'
     var section_title = data.section_title;
     var pass_mark = data.pass_mark;
     var award_message = data.award_message;
     var motivation_message = data.motivation_message;
+
+    var handlerUrl = runtime.handlerUrl(element, 'new_award_badge')
 
     function getGrades(data) {
         var b = JSON.stringify(data);
@@ -15,11 +17,11 @@ function BadgerXBlock(runtime, element, data) {
         var this_section = section_scores[String(section_title)];
         console.log(section_scores);
         console.log(this_section);
-        if ( parseFloat(this_section) > pass_mark) {
+        if ( parseFloat(this_section) == pass_mark) {
             $.ajax({
             type: "POST",
             url: badger_api,
-            data: JSON.stringify({"hello": "world"}),
+            data: JSON.stringify(),
             success: getGrades
         });
 
@@ -28,6 +30,8 @@ function BadgerXBlock(runtime, element, data) {
             alert(motivation_message)
         }
     }
+
+
 
     $('a', element).click(function(eventObject) {
         $.ajax({
