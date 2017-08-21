@@ -38,6 +38,13 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         default="NewBadgeClass"
     )
 
+    issuer_slug = String(
+        display_name="Issuer slug",
+        help="must be lower case unique name.",
+        scope=Scope.settings,
+        default="test-badge"
+    )
+
     badge_slug = String(
         display_name="Badge slug",
         help="must be lower case unique name.",
@@ -112,7 +119,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help='Message the user will see if they do not quailify for a badge'
     )
 
-    editable_fields = ('display_name', 'badge_class_name', 'badge_slug', 'image_url', 'criteria', 'description', 'pass_mark', 'section_title', 'award_message', 'motivation_message', 'single_activity', 'activity_title',)
+    editable_fields = ('display_name', 'badge_class_name', 'issuer_slug','badge_slug', 'image_url', 'criteria', 'description', 'pass_mark', 'section_title', 'award_message', 'motivation_message', 'single_activity', 'activity_title',)
     show_in_read_only_mode = True
  
     def resource_string(self, path):
@@ -145,13 +152,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     def new_award_badge(self, badge_service):
         
         badge_class = badge_service.get_badge_class(
-            slug=self.badge_slug, issuing_component='my_org__award_block',
-            description=self.description,
-            criteria=self.criteria,
-            display_name=self.badge_class_name,
-            course_id=self.runtime.course_id,
-            image_file_handle='http://0.0.0.0:8000/asset-v1:edX+DemoX+Demo_Course+type@asset+block@lid_test.png',
-            create=True
+           slug=self.badge_slug, issuing_component=self.issuer_slug,
+            course_id=self.runtime.course_id
         )
         # /asset-v1:edX+DemoX+Demo_Course+type@asset+block@lid_test.png
         # Award the badge.
