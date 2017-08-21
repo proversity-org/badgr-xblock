@@ -128,9 +128,10 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         return data.decode("utf8")
 
     # TO-DO: change this view to display your data your own way.
+    @XBlock.json_handler
+    def new_award_badge(self, data, suffix=''):
 
-    def new_award_badge(self, badge_service):
-        
+        badge_service = self.runtime.service(self, 'badging')
         badge_class = badge_service.get_badge_class(
            slug=self.badge_slug, issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
@@ -156,6 +157,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                     data = data.replace("%%USER_EMAIL%%", user.email)
 
         badge_class.award(user)
+
+        return {'json': 'The badge was awarded'}
 
     def student_view(self, context=None):
         """
@@ -191,7 +194,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         print "**************", data
 
         if user_service and badge_service:
-            self.new_award_badge(badge_service)
+            #self.new_award_badge(badge_service)
+            print "hi"
         return frag
 
 

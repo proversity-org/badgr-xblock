@@ -17,7 +17,7 @@ function BadgerXBlock(runtime, element, data) {
         var this_section = section_scores[String(section_title)];
         console.log(section_scores);
         console.log(this_section);
-        if ( parseFloat(this_section) <= pass_mark) {
+        if ( parseFloat(this_section) >= pass_mark) {
             $.ajax({
             type: "POST",
             url: handlerUrl,
