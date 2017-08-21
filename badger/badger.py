@@ -39,14 +39,14 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     )
 
     issuer_slug = String(
-        display_name="Issuer slug",
+        display_name="Issuer name",
         help="must be lower case unique name.",
         scope=Scope.settings,
         default="test-badge"
     )
 
     badge_slug = String(
-        display_name="Badge slug",
+        display_name="Badge name",
         help="must be lower case unique name.",
         scope=Scope.settings,
         default="test-badge"
@@ -119,7 +119,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help='Message the user will see if they do not quailify for a badge'
     )
 
-    editable_fields = ('display_name', 'badge_class_name', 'issuer_slug','badge_slug', 'image_url', 'criteria', 'description', 'pass_mark', 'section_title', 'award_message', 'motivation_message', 'single_activity', 'activity_title',)
+    editable_fields = ('display_name', 'issuer_slug','badge_slug', 'pass_mark', 'image_url', 'criteria', 'description', 'section_title', 'award_message', 'motivation_message', 'single_activity', 'activity_title',)
     show_in_read_only_mode = True
  
     def resource_string(self, path):
@@ -135,13 +135,25 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
            slug=self.badge_slug, issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
             display_name=self.display_name,
-            description="Testing new badgr server",
-            criteria="Just testing 21 August",
+            description=self.description,
+            criteria=self.criteria,
         )
         # /asset-v1:edX+DemoX+Demo_Course+type@asset+block@lid_test.png
         # Award the badge.
         #if not badge_class.get_for_user(self.runtime.get_real_user(self.runtime.anonymous_student_id)):
         user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
+
+        if self.runtime.user_is_staff:  
+            from django.contrib.auth.models import User
+            user = User.objects.get(id=self.runtime.user_id)
+            data = data.replace("%%USER_EMAIL%%", user.email)
+        elif self.runtime.anonymous_student_id:
+            data = data.replace("%%USER_ID%%", self.runtime.anonymous_student_id)
+            if getattr(self.runtime, 'get_real_user', None):
+                user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
+                if user and user.is_authenticated():
+                    data = data.replace("%%USER_EMAIL%%", user.email)
+
         badge_class.award(user)
 
     def student_view(self, context=None):
@@ -162,6 +174,21 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'motivation_message': self.motivation_message
         })
         
+        data = ''
+
+        if self.runtime.user_is_staff:  
+            from django.contrib.auth.models import User
+            user = User.objects.get(id=self.runtime.user_id)
+            data = data.replace("%%USER_EMAIL%%", user.email)
+        elif self.runtime.anonymous_student_id:
+            data = data.replace("%%USER_ID%%", self.runtime.anonymous_student_id)
+            if getattr(self.runtime, 'get_real_user', None):
+                user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
+                if user and user.is_authenticated():
+                    data = data.replace("%%USER_EMAIL%%", user.email)
+
+        print "**************", data
+
         if user_service and badge_service:
             self.new_award_badge(badge_service)
         return frag
