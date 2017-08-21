@@ -3,7 +3,6 @@ function BadgerXBlock(runtime, element, data) {
 
     var my_url = '/api/grades/v0/course_grade/course-v1:edX+DemoX+Demo_Course/users/'
     var user = data.user
-    var badger_api = 'http://badgr.proversity.org/v1/issuer/issuers/proversity/badges/congeniality/assertions'
     var section_title = data.section_title;
     var pass_mark = data.pass_mark;
     var award_message = data.award_message;
