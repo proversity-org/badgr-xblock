@@ -2,6 +2,7 @@
 
 import pkg_resources
 import logging
+from django.conf import settings
 from xblock.core import XBlock
 from django.contrib.auth.models import User
 from xblock.fields import Scope, Integer, String, Float, List, Boolean, ScopeIds
@@ -32,7 +33,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     badge_class_name = String(
         display_name="Badge Class",
-        help="This is the name of the specifi badge class used in this graded subsection.",
+        help="This is the name of the specific badge class used in this graded subsection.",
         scope=Scope.settings,
         default="NewBadgeClass"
     )
@@ -113,7 +114,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     editable_fields = ('display_name', 'badge_class_name', 'badge_slug', 'image_url', 'criteria', 'description', 'pass_mark', 'section_title', 'award_message', 'motivation_message', 'single_activity', 'activity_title',)
     show_in_read_only_mode = True
-
+ 
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
         data = pkg_resources.resource_string(__name__, path)
@@ -139,8 +140,6 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         )
         # Award the badge.
         #if not badge_class.get_for_user(self.runtime.get_real_user(self.runtime.anonymous_student_id)):
-        print "EEEUUUUU"
-        print self.xblock_mongodb_xmoduledb
         badge_class.award(self.runtime.get_real_user(self.runtime.anonymous_student_id))
 
     def new_award_badge(self, badge_service):
@@ -151,18 +150,14 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             criteria=self.criteria,
             display_name=self.badge_class_name,
             course_id=self.runtime.course_id,
-            image_file_handle=self.image_url,
+            image_file_handle='http://0.0.0.0:8000/asset-v1:edX+DemoX+Demo_Course+type@asset+block@lid_test.png',
             create=True
         )
+        # /asset-v1:edX+DemoX+Demo_Course+type@asset+block@lid_test.png
         # Award the badge.
         #if not badge_class.get_for_user(self.runtime.get_real_user(self.runtime.anonymous_student_id)):
-    
-        badge_class.award(self.runtime.get_real_user(self.runtime.anonymous_student_id))
-
-    def handle_image_upload(self):
-
-
-        pass
+        user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
+        badge_class.award(user)
 
     def student_view(self, context=None):
         """
@@ -176,6 +171,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         frag.add_css(self.resource_string("static/css/badger.css"))
         frag.add_javascript(self.resource_string("static/js/src/badger.js"))
         frag.initialize_js('BadgerXBlock', {
+            'user': user.username,
             'pass_mark': self.pass_mark,
             'section_title': self.section_title,
             'award_message': self.award_message,
@@ -183,8 +179,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         })
         
         if user_service and badge_service:
-            print "Hii"
-            self.award_badge(badge_service)
+            self.new_award_badge(badge_service)
         return frag
 
 

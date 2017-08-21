@@ -2,6 +2,8 @@
 function BadgerXBlock(runtime, element, data) {
 
     var my_url = '/api/grades/v0/course_grade/course-v1:edX+DemoX+Demo_Course/users/'
+    var user = data.user
+    var badger_api = 'api/badges/v1/assertions/user/' + user
     var section_title = data.section_title;
     var pass_mark = data.pass_mark;
     var award_message = data.award_message;
@@ -14,7 +16,13 @@ function BadgerXBlock(runtime, element, data) {
         console.log(section_scores);
         console.log(this_section);
         if ( parseFloat(this_section) > pass_mark) {
-            alert(award_message)
+            $.ajax({
+            type: "POST",
+            url: badger_api,
+            data: JSON.stringify({"hello": "world"}),
+            success: getGrades
+        });
+
         }
         else {
             alert(motivation_message)
