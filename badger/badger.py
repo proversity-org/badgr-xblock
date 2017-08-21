@@ -143,6 +143,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         #if not badge_class.get_for_user(self.runtime.get_real_user(self.runtime.anonymous_student_id)):
         user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
 
+        data = ''
         if self.runtime.user_is_staff:  
             from django.contrib.auth.models import User
             user = User.objects.get(id=self.runtime.user_id)

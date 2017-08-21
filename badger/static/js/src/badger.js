@@ -17,12 +17,14 @@ function BadgerXBlock(runtime, element, data) {
         var this_section = section_scores[String(section_title)];
         console.log(section_scores);
         console.log(this_section);
-        if ( parseFloat(this_section) == pass_mark) {
+        if ( parseFloat(this_section) <= pass_mark) {
             $.ajax({
             type: "POST",
-            url: badger_api,
-            data: JSON.stringify(),
-            success: getGrades
+            url: handlerUrl,
+            data: JSON.stringify({"hello": "world"}),
+            success: function(json) {
+                alert(award_message)
+            }
         });
 
         }
@@ -42,7 +44,4 @@ function BadgerXBlock(runtime, element, data) {
         });
     });
 
-    $(function ($) {
-        /* Here's where you'd do things on page load. */
-    });
 }
