@@ -55,7 +55,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     image_url = String(
         display_name="Image url",
         help="The url for the badge image located in static files",
-        scope=Scope.settings,
+        scope=Scope.user_state,
         default="/static/my-badge"
     )
 
@@ -63,14 +63,14 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Criteria",
         help="How does one earn this badge?",
         scope=Scope.settings,
-        default="Visit a page with an award block."
+        default="Achieve a pass mark of 80% percent or more"
     )
 
     description = String(
         display_name="Description",
         help="What is this badge",
         scope=Scope.settings,
-        default="A Shiny badge, given to anyone who finds it!"
+        default="A Shiny badge, given to exceptional students"
     )
 
     section_title = String(
@@ -105,6 +105,19 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help="A simple counter, to show something happening",
     )
 
+    received_award = Boolean(
+        default = False, 
+        scope=Scope.user_state,
+        help='Has the user received a badge for this sub-section'
+    )
+
+    assertion_url = String(
+        default = None, 
+        scope=Scope.user_state,
+        help='The user'
+    ) 
+
+
     award_message = String(
         display_name='Award message',
         default='Well done you are an all star!',
@@ -119,7 +132,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help='Message the user will see if they do not quailify for a badge'
     )
 
-    editable_fields = ('display_name', 'issuer_slug','badge_slug', 'pass_mark', 'image_url', 'criteria', 'description', 'section_title', 'award_message', 'motivation_message', 'single_activity', 'activity_title',)
+
+    editable_fields = ('display_name', 'description', 'criteria', 'issuer_slug','badge_slug', 'pass_mark', 'section_title', 'award_message', 'motivation_message', 'single_activity',)
     show_in_read_only_mode = True
  
     def resource_string(self, path):
@@ -132,33 +146,30 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     def new_award_badge(self, data, suffix=''):
 
         badge_service = self.runtime.service(self, 'badging')
+
+
         badge_class = badge_service.get_badge_class(
            slug=self.badge_slug, issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
-            display_name=self.display_name,
+            display_name=self.slug,
             description=self.description,
-            criteria=self.criteria,
+            criteria=self.criteria
         )
         # /asset-v1:edX+DemoX+Demo_Course+type@asset+block@lid_test.png
         # Award the badge.
         #if not badge_class.get_for_user(self.runtime.get_real_user(self.runtime.anonymous_student_id)):
         user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
 
-        data = ''
-        if self.runtime.user_is_staff:  
-            from django.contrib.auth.models import User
-            user = User.objects.get(id=self.runtime.user_id)
-            data = data.replace("%%USER_EMAIL%%", user.email)
-        elif self.runtime.anonymous_student_id:
-            data = data.replace("%%USER_ID%%", self.runtime.anonymous_student_id)
-            if getattr(self.runtime, 'get_real_user', None):
-                user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
-                if user and user.is_authenticated():
-                    data = data.replace("%%USER_EMAIL%%", user.email)
-
         badge_class.award(user)
 
-        return {'json': 'The badge was awarded'}
+        badge_assertions = badge_service.assertions_for_user(user=user)
+        slug_assertions = badge_service.slug_assertion_for_user(user=user, slug=self.badge_slug)
+
+        print "^^^^^^", type(slug_assertions[0]), slug_assertions[0]['image_url']
+        self.received_award = True
+        self.image_url = slug_assertions[0]['image_url']
+        self.assertion_url = slug_assertions[0]['assertion_url']
+        return {'message': str(badge_assertions)}
 
     def student_view(self, context=None):
         """
@@ -167,8 +178,21 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         badge_service = self.runtime.service(self, 'badging')
         user_service = self.runtime.service(self, 'user')
-        html = self.resource_string("static/html/badger.html")
-        frag = Fragment(html.format(self=self))
+
+
+        #html = self.resource_string("static/html/badger.html")
+        
+
+        
+           
+        context = {
+            'received_award': self.received_award,
+            'section_title': self.section_title,
+            'image_url': self.image_url,
+            'assertion_url': self.assertion_url
+        }
+
+        frag = Fragment(loader.render_django_template("static/html/badger.html", context).format(self=self))
         frag.add_css(self.resource_string("static/css/badger.css"))
         frag.add_javascript(self.resource_string("static/js/src/badger.js"))
         frag.initialize_js('BadgerXBlock', {
@@ -196,6 +220,10 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         if user_service and badge_service:
             #self.new_award_badge(badge_service)
             print "hi"
+
+
+
+
         return frag
 
 

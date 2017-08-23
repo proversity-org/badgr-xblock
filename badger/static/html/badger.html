@@ -1,4 +1,13 @@
-<div class="badger_block" id="{self.section_title}">
-<!-- <img src="{self.image_url}" alt="Mountain View" style="width:250px;height:250px;"> -->
+<div class="badger_block" id="{{section_title}}">
+
+
+{% if received_award %}
+	<p> You have received a badge. <a href="{{assertion_url}}">View the verified badge here.</a> </p> 
+	<img src="{{image_url}}" style="width:250px;height:250px;"> 
+	
+{% else %}
 <a href="#" class="btn-gradient cyan block">Click to see if you have earned a badge</a>
+
+{% endif %}
+
 </div>
