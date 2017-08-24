@@ -151,7 +151,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         badge_class = badge_service.get_badge_class(
            slug=self.badge_slug, issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
-            display_name=self.slug,
+            display_name=self.badge_slug,
             description=self.description,
             criteria=self.criteria
         )
@@ -159,13 +159,9 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         # Award the badge.
         #if not badge_class.get_for_user(self.runtime.get_real_user(self.runtime.anonymous_student_id)):
         user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
-
         badge_class.award(user)
-
         badge_assertions = badge_service.assertions_for_user(user=user)
         slug_assertions = badge_service.slug_assertion_for_user(user=user, slug=self.badge_slug)
-
-        print "^^^^^^", type(slug_assertions[0]), slug_assertions[0]['image_url']
         self.received_award = True
         self.image_url = slug_assertions[0]['image_url']
         self.assertion_url = slug_assertions[0]['assertion_url']
@@ -178,13 +174,6 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         badge_service = self.runtime.service(self, 'badging')
         user_service = self.runtime.service(self, 'user')
-
-
-        #html = self.resource_string("static/html/badger.html")
-        
-
-        
-           
         context = {
             'received_award': self.received_award,
             'section_title': self.section_title,
@@ -201,28 +190,6 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'award_message': self.award_message,
             'motivation_message': self.motivation_message
         })
-        
-        data = ''
-
-        if self.runtime.user_is_staff:  
-            from django.contrib.auth.models import User
-            user = User.objects.get(id=self.runtime.user_id)
-            data = data.replace("%%USER_EMAIL%%", user.email)
-        elif self.runtime.anonymous_student_id:
-            data = data.replace("%%USER_ID%%", self.runtime.anonymous_student_id)
-            if getattr(self.runtime, 'get_real_user', None):
-                user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
-                if user and user.is_authenticated():
-                    data = data.replace("%%USER_EMAIL%%", user.email)
-
-        print "**************", data
-
-        if user_service and badge_service:
-            #self.new_award_badge(badge_service)
-            print "hi"
-
-
-
 
         return frag
 
