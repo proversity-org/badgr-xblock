@@ -31,13 +31,6 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         default="Badger"
     )
 
-    badge_class_name = String(
-        display_name="Badge Class",
-        help="This is the name of the specific badge class used in this graded subsection.",
-        scope=Scope.settings,
-        default="NewBadgeClass"
-    )
-
     issuer_slug = String(
         display_name="Issuer name",
         help="must be lower case unique name.",
@@ -53,17 +46,16 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     )
 
     image_url = String(
-        display_name="Image url",
-        help="The url for the badge image located in static files",
+        help="The url for the badge image on Badgr server",
         scope=Scope.user_state,
-        default="/static/my-badge"
+        default=""
     )
 
     criteria = String(
         display_name="Criteria",
         help="How does one earn this badge?",
         scope=Scope.settings,
-        default="Achieve a pass mark of 80% percent or more"
+        default="Achieve a pass mark of 80% percent or more for course module 1"
     )
 
     description = String(
@@ -80,29 +72,11 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         default="Section"
     )
 
-    single_activity = Boolean(
-        display_name='Single activity',
-        default=False,
-        scope=Scope.settings,
-        help='Is this badge for a single activity or an entire section?'
-    )
-
-    activity_title = String(
-        display_name='Activity title.',
-        help='Give the title of the activity in this section for the award.',
-        scope=Scope.settings,
-    )
     pass_mark = Float(
         display_name='Pass mark',
         default=80.0, 
         scope=Scope.settings,
         help="Minium grade required to award this badge",
-    )
-
-    count = Integer(
-        default=0, 
-        scope=Scope.user_state,
-        help="A simple counter, to show something happening",
     )
 
     received_award = Boolean(
@@ -165,7 +139,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         self.received_award = True
         self.image_url = slug_assertions[0]['image_url']
         self.assertion_url = slug_assertions[0]['assertion_url']
-        return {'message': str(badge_assertions)}
+        return {"image_url": self.image_url, "assertion_url": self.assertion_url}
 
     def student_view(self, context=None):
         """

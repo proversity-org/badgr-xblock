@@ -11,18 +11,21 @@ function BadgerXBlock(runtime, element, data) {
     var handlerUrl = runtime.handlerUrl(element, 'new_award_badge')
 
     function getGrades(data) {
-        var b = JSON.stringify(data);
         var section_scores = data['section_scores'];
         var this_section = section_scores[String(section_title)];
-        console.log(section_scores);
-        console.log(this_section);
         if ( parseFloat(this_section) >= pass_mark) {
             $.ajax({
             type: "POST",
             url: handlerUrl,
-            data: JSON.stringify({"hello": "world"}),
+            data:JSON.stringify({"name": "badger"}),
             success: function(json) {
-                alert(award_message)
+                var $badge = $('<p class="badger-award"> You have received a badge. <a href="' + 
+                                json['asertion_url'] +
+                                '">View the verified badge here.</a> </p> <img id="image-url" src="' +
+                                json['image_url'] + 
+                                '" style="width:250px;height:250px;">');
+                $('.badger_block').append($badge);
+                $('#check-for-badge').remove();
             }
         });
 
