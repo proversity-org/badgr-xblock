@@ -159,6 +159,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         frag.add_css(self.resource_string("static/css/badger.css"))
         frag.add_javascript(self.resource_string("static/js/src/badger.js"))
         frag.initialize_js('BadgerXBlock', {
+            '': self.runtime.course_id,
             'pass_mark': self.pass_mark,
             'section_title': self.section_title,
             'award_message': self.award_message,

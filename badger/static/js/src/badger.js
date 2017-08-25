@@ -1,7 +1,7 @@
 /* Javascript for BadgerXBlock. */
 function BadgerXBlock(runtime, element, data) {
 
-    var my_url = '/api/grades/v0/course_grade/course-v1:edX+DemoX+Demo_Course/users/'
+    var my_url = '/api/grades/v0/course_grade/' + data.course_id + '/users/'
     var user = data.user
     var section_title = data.section_title;
     var pass_mark = data.pass_mark;
@@ -11,7 +11,9 @@ function BadgerXBlock(runtime, element, data) {
 
     function getGrades(data) {
         var section_scores = data['section_scores'];
+        console.log(section_scores);
         var this_section = section_scores[String(section_title)];
+        console.log("HI", this_section, pass_mark, section_scores);
         if ( parseFloat(this_section) >= pass_mark) {
             $.ajax({
             type: "POST",
@@ -43,7 +45,7 @@ function BadgerXBlock(runtime, element, data) {
         $.ajax({
             type: "GET",
             url: my_url,
-            data: JSON.stringify({"hello": "world"}),
+            data: JSON.stringify({"username": user}),
             success: getGrades
         });
     });
