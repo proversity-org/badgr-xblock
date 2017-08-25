@@ -1,13 +1,16 @@
 <div class="badger_block" id="{{section_title}}">
 
 
-{% if received_award %}
-	<p class='badger-award'> You have received a badge. <a href="{{assertion_url}}">View the verified badge here.</a> </p> 
-	<img src="{{image_url}}" style="width:250px;height:250px;"> 
-	<!-- <a href="#" class="btn-gradient cyan block">Click to see if you have earned a badge</a> -->
-{% else %}
-<a href="#" id="check-for-badge" class="btn-gradient cyan block">Click to see if you have earned a badge.</a>
+	{% if received_award %}
+		<p class='badger-award'> You have received a badge. <a href="{{assertion_url}}">View the verified badge here.</a> </p> 
+		<img src="{{image_url}}" style="width:250px;height:250px;"> 
+		<!-- <a href="#" class="btn-gradient cyan block">Click to see if you have earned a badge</a> -->
+	{% else %}
+		<a href="#" id="check-for-badge" class="btn-gradient cyan block">Click to see if you have earned a badge.</a>
+	{% endif %}
 
-{% endif %}
 
+
+ <div class='badge-loader' tabindex="1000" role="dialog"></div>
+ <div id="lean_overlay" style="display: block; opacity: 1; display:none; z-index:3;"></div>
 </div>
