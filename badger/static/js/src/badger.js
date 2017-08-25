@@ -30,7 +30,10 @@ function BadgerXBlock(runtime, element, data) {
 
         }
         else {
-            alert(motivation_message)
+            var $motivation = $('<p class="badger-motivation">' 
+                + motivation_message + '</p>' );
+                $('.badger_block').append($motivation);
+                $('#check-for-badge').remove();
         }
     }
 
