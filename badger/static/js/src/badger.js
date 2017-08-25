@@ -7,7 +7,6 @@ function BadgerXBlock(runtime, element, data) {
     var pass_mark = data.pass_mark;
     var award_message = data.award_message;
     var motivation_message = data.motivation_message;
-
     var handlerUrl = runtime.handlerUrl(element, 'new_award_badge')
 
     function getGrades(data) {
