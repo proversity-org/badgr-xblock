@@ -9,35 +9,23 @@ function BadgerXBlock(runtime, element, data) {
     var motivation_message = data.motivation_message;
     var handlerUrl = runtime.handlerUrl(element, 'new_award_badge');
 
-
-    // Callback for showing and hiding spinner
-    function SpinnerCallback(shouldShowSpinner, cb) {
-       if (shouldShowSpinner) {
-            $('#lean_overlay').show();
-            $('.recap-loader').show('fast', 'linear', function() { cb()});
-       } else {
-            $('#lean_overlay').hide();
-            $('.recap-loader').hide('fast', 'linear', function() { cb()});
-        }
-    }
-
-
     function getGrades(data) {
         var section_scores = data['section_scores'];
         var this_section = section_scores[String(section_title)];
+        
         if ( parseFloat(this_section) >= pass_mark) {
             $.ajax({
             type: "POST",
             url: handlerUrl,
             data:JSON.stringify({"name": "badger"}),
             success: function(json) {
+                $('.badge-loader').hide();
+                $('#lean_overlay').hide();
                 var $badge = $('<p class="badger-award"> You have received a badge. <a href="' + 
                                 json['asertion_url'] +
                                 '">View the verified badge here.</a> </p> <img id="image-url" src="' +
                                 json['image_url'] + 
                                 '" style="width:250px;height:250px;">');
-                $('.badge-loader').hide();
-                $('#lean_overlay').hide();
                 $('.badger_block').append($badge);
                 $('#check-for-badge').remove();
             }
@@ -45,6 +33,8 @@ function BadgerXBlock(runtime, element, data) {
 
         }
         else {
+            $('.badge-loader').hide();
+            $('#lean_overlay').hide();
             var $motivation = $('<p class="badger-motivation">' 
                 + motivation_message + '</p>' );
                 $('.badger_block').append($motivation);

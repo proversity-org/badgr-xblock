@@ -155,15 +155,16 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'assertion_url': self.assertion_url
         }
 
+        print "*******", type(str(self.runtime.course_id)), str(self.runtime.course_id)
         frag = Fragment(loader.render_django_template("static/html/badger.html", context).format(self=self))
         frag.add_css(self.resource_string("static/css/badger.css"))
         frag.add_javascript(self.resource_string("static/js/src/badger.js"))
         frag.initialize_js('BadgerXBlock', {
-            'course_id': self.runtime.course_id,
             'pass_mark': self.pass_mark,
             'section_title': self.section_title,
             'award_message': self.award_message,
-            'motivation_message': self.motivation_message
+            'motivation_message': self.motivation_message,
+            'course_id':  str(self.runtime.course_id),
         })
 
         return frag
