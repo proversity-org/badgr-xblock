@@ -1,8 +1,8 @@
 /* Javascript for BadgerXBlock. */
 function BadgerXBlock(runtime, element, data) {
 
-    var my_url = '/api/grades/v0/course_grade/' + data.course_id + '/users/'
     var user = data.user
+    var my_url = '/api/grades/v0/course_grade/' + data.course_id + '/users/?username=' + user
     var section_title = data.section_title;
     var pass_mark = data.pass_mark;
     var award_message = data.award_message;
@@ -52,7 +52,7 @@ function BadgerXBlock(runtime, element, data) {
         $.ajax({
             type: "GET",
             url: my_url,
-            data: JSON.stringify({"username": user}),
+            // data: JSON.stringify({"username": user}),
             success: getGrades
         });
     });

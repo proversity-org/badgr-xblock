@@ -120,8 +120,6 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     def new_award_badge(self, data, suffix=''):
 
         badge_service = self.runtime.service(self, 'badging')
-
-
         badge_class = badge_service.get_badge_class(
            slug=self.badge_slug, issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
@@ -129,9 +127,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             description=self.description,
             criteria=self.criteria
         )
-        # /asset-v1:edX+DemoX+Demo_Course+type@asset+block@lid_test.png
-        # Award the badge.
-        #if not badge_class.get_for_user(self.runtime.get_real_user(self.runtime.anonymous_student_id)):
+        
+        # Award the badge
         user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
         badge_class.award(user)
         badge_assertions = badge_service.assertions_for_user(user=user)
@@ -146,8 +143,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The primary view of the BadgerXBlock, shown to students
         when viewing courses.
         """
-        badge_service = self.runtime.service(self, 'badging')
-        user_service = self.runtime.service(self, 'user')
+        user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
         context = {
             'received_award': self.received_award,
             'section_title': self.section_title,
@@ -155,11 +151,11 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'assertion_url': self.assertion_url
         }
 
-        print "*******", type(str(self.runtime.course_id)), str(self.runtime.course_id)
         frag = Fragment(loader.render_django_template("static/html/badger.html", context).format(self=self))
         frag.add_css(self.resource_string("static/css/badger.css"))
         frag.add_javascript(self.resource_string("static/js/src/badger.js"))
         frag.initialize_js('BadgerXBlock', {
+            'user': str(user.username),
             'pass_mark': self.pass_mark,
             'section_title': self.section_title,
             'award_message': self.award_message,
@@ -191,20 +187,6 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         frag.add_javascript(loader.load_unicode("static/js/src/badger_edit.js"))
         frag.initialize_js('StudioEditableXBlockMixin')
         return frag
-
-
-    # TO-DO: change this handler to perform your own actions.  You may need more
-    # than one handler, or you may not need any handlers at all.
-    @XBlock.json_handler
-    def increment_count(self, data, suffix=''):
-        """
-        An example handler, which increments the data.
-        """
-        # Just to show data coming in...
-        assert data['hello'] == 'world'
-
-        self.count += 1
-        return {"count": self.count}
 
     # TO-DO: change this to create the scenarios you'd like to see in the
     # workbench while developing your XBlock.
