@@ -143,7 +143,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The primary view of the BadgerXBlock, shown to students
         when viewing courses.
         """
-        user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
+        if self.runtime.get_real_user is not None:
+            user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
         context = {
             'received_award': self.received_award,
             'section_title': self.section_title,
@@ -155,7 +156,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         frag.add_css(self.resource_string("static/css/badger.css"))
         frag.add_javascript(self.resource_string("static/js/src/badger.js"))
         frag.initialize_js('BadgerXBlock', {
-            'user': str(user.username),
+            #'user': str(user.username),
             'pass_mark': self.pass_mark,
             'section_title': self.section_title,
             'award_message': self.award_message,
