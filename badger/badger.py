@@ -85,6 +85,12 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help='Has the user received a badge for this sub-section'
     )
 
+    check_earned = Boolean(
+        default = False, 
+        scope=Scope.user_state,
+        help='Has the user check if they are eligible for a badge.'
+    )
+
     assertion_url = String(
         default = None, 
         scope=Scope.user_state,
@@ -134,9 +140,18 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         badge_assertions = badge_service.assertions_for_user(user=user)
         slug_assertions = badge_service.slug_assertion_for_user(user=user, slug=self.badge_slug)
         self.received_award = True
+        self.check_earned = True
         self.image_url = slug_assertions[0]['image_url']
         self.assertion_url = slug_assertions[0]['assertion_url']
         return {"image_url": self.image_url, "assertion_url": self.assertion_url}
+
+
+
+    @property
+    def current_user_key(self):
+        user = self.runtime.service(self, 'user').get_current_user()
+        # We may be in the SDK, in which case the username may not really be available.
+        return user.opt_attrs.get('edx-platform.username', 'username')
 
     def student_view(self, context=None):
         """
@@ -145,6 +160,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         if self.runtime.get_real_user is not None:
             user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
+        else:
+            user = User.objects.get(username=self.current_user_key)
         context = {
             'received_award': self.received_award,
             'section_title': self.section_title,
@@ -156,7 +173,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         frag.add_css(self.resource_string("static/css/badger.css"))
         frag.add_javascript(self.resource_string("static/js/src/badger.js"))
         frag.initialize_js('BadgerXBlock', {
-            #'user': str(user.username),
+            'user': str(user.username),
             'pass_mark': self.pass_mark,
             'section_title': self.section_title,
             'award_message': self.award_message,
