@@ -146,7 +146,14 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         self.check_earned = True
         self.image_url = slug_assertions[0]['image_url']
         self.assertion_url = slug_assertions[0]['assertion_url']
-        return {"image_url": self.image_url, "assertion_url": self.assertion_url}
+
+        badge_html_dict = {
+            "image_url": self.image_url,
+            "assertion_url": self.assertion_url,
+            "description": self.description,
+            "criteria": self.criteria,
+        }
+        return badge_html_dict
 
 
     @XBlock.json_handler

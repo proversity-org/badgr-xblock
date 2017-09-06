@@ -13,6 +13,7 @@ function BadgerXBlock(runtime, element, data) {
     function getGrades(data) {
         var section_scores = data['section_scores'];
         var this_section = section_scores[String(section_title)];
+        var section_title_id = '#' + section_title
         if ( parseFloat(this_section) >= pass_mark) {
             $.ajax({
             type: "POST",
@@ -21,12 +22,40 @@ function BadgerXBlock(runtime, element, data) {
             success: function(json) {
                 $('.badge-loader').hide();
                 $('#lean_overlay').hide();
-                var $badge = $('<p class="badger-award"> You have received a badge. <a href="' + 
-                                json['asertion_url'] +
-                                '">View the verified badge here.</a> </p> <img id="image-url" src="' +
-                                json['image_url'] + 
-                                '" style="width:250px;height:250px;">');
-                $('.badger_block').append($badge);
+                // var $badge = $('<p class="badger-award"> You have received a badge. <a href="' + 
+                //                 json['asertion_url'] +
+                //                 '">View the verified badge here.</a> </p> <img id="image-url" src="' +
+                //                 json['image_url'] + 
+                //                 '" style="width:250px;height:250px;">');
+                // $(section_title_id).append($badge);
+
+                var $badge = $( '<p class="badger-award"> You have received a badge. <a href="' + 
+                                 json['asertion_url'] +
+                                '">View the verified badge here.</a>' +
+                            '<table width="100%" style="border: none;">' + 
+                                '<tbody>' +
+                                    '<tr style="border: none;">' + 
+                                    '<td style="border: none;" width="70%">' +
+                                        '<p><strong>Description</strong></p>' + 
+                                        '<p>' +
+                                            json['description'] +
+                                        '</p>' + 
+                                        '<p><strong>Criteria</strong></p>' + 
+                                            '<p>In order to earn this badge, participants must:</p>' + 
+                                            '<p>'+ 
+                                                json['criteria'] + 
+                                            '</p>' + 
+                                    '</td>'+
+                                    '<td style="vertical-align: middle; border: none;" width="30%">' + 
+                                        '<img src=' + json['image_url'] + 'style="width:250px;height:250px;">' +
+                                    '</td>' + 
+                                    '</tr>' +
+                                '</tbody>' + 
+                            '</table>');
+
+                $(section_title_id).append($badge);
+
+
                 $('#check-for-badge').remove();
                 }
             });
