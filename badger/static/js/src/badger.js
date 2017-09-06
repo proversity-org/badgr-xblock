@@ -8,6 +8,7 @@ function BadgerXBlock(runtime, element, data) {
     var award_message = data.award_message;
     var motivation_message = data.motivation_message;
     var handlerUrl = runtime.handlerUrl(element, 'new_award_badge');
+    var noAwardUrl = runtime.handlerUrl(element, 'no_award_received');
 
     function getGrades(data) {
         var section_scores = data['section_scores'];
@@ -27,23 +28,30 @@ function BadgerXBlock(runtime, element, data) {
                                 '" style="width:250px;height:250px;">');
                 $('.badger_block').append($badge);
                 $('#check-for-badge').remove();
-            }
-        });
+                }
+            });
 
         }
         else {
-            $('.badge-loader').hide();
-            $('#lean_overlay').hide();
-            var $motivation = $('<p class="badger-motivation">' 
+            $.ajax({
+            type: "POST",
+            url: noAwardUrl,
+            data:JSON.stringify({"name": "badger"}),
+            success: function(json) {
+                $('.badge-loader').hide();
+                $('#lean_overlay').hide();
+                var $motivation = $('<p class="badger-motivation">' 
                 + motivation_message + '</p>' );
                 $('.badger_block').append($motivation);
                 $('#check-for-badge').remove();
+                }
+            });
         }
     }
 
 
 
-    $('a', element).click(function(event) {
+    $('#check-for-badge').click(function(event) {
         event.preventDefault();
         event.stopImmediatePropagation()
         $('#lean_overlay').show();

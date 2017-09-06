@@ -142,7 +142,6 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         badge_class.award(user)
         badge_assertions = badge_service.assertions_for_user(user=user)
         slug_assertions = badge_service.slug_assertion_for_user(user=user, slug=self.badge_slug)
-
         self.received_award = True
         self.check_earned = True
         self.image_url = slug_assertions[0]['image_url']
@@ -150,6 +149,16 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         return {"image_url": self.image_url, "assertion_url": self.assertion_url}
 
 
+    @XBlock.json_handler
+    def no_award_badge(self, data, suffix=''):
+        """
+        The json handler which uses the badge service to deal with no
+        badge being earned.
+        """
+        self.received_award = False
+        self.check_earned = True
+
+        return {"image_url": self.image_url, "assertion_url": self.assertion_url}
 
     @property
     def current_user_key(self):
@@ -171,9 +180,13 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         context = {
             'received_award': self.received_award,
+            'check_earned': self.check_earned,
             'section_title': self.section_title,
             'image_url': self.image_url,
-            'assertion_url': self.assertion_url
+            'assertion_url': self.assertion_url,
+            'description': self.description,
+            'criteria': self.criteria,
+            'award_message': self.award_message
         }
 
         frag = Fragment(loader.render_django_template("static/html/badger.html", context).format(self=self))
