@@ -12,7 +12,6 @@ function BadgerXBlock(runtime, element, data) {
     function getGrades(data) {
         var section_scores = data['section_scores'];
         var this_section = section_scores[String(section_title)];
-        
         if ( parseFloat(this_section) >= pass_mark) {
             $.ajax({
             type: "POST",

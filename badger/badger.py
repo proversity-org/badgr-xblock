@@ -28,21 +28,21 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Display Name",
         help="This name appears in the horizontal navigation at the top of the page.",
         scope=Scope.settings,
-        default="Badger"
+        default=u"Badger"
     )
 
     issuer_slug = String(
         display_name="Issuer name",
         help="must be lower case unique name.",
         scope=Scope.settings,
-        default="test-badge"
+        default=u"proversity"
     )
 
     badge_slug = String(
         display_name="Badge name",
         help="must be lower case unique name.",
         scope=Scope.settings,
-        default="test-badge"
+        default=u"test-badge"
     )
 
     image_url = String(
@@ -55,14 +55,14 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Criteria",
         help="How does one earn this badge?",
         scope=Scope.settings,
-        default="Achieve a pass mark of 80% percent or more for course module 1"
+        default=u"Achieve a pass mark of 80% percent or more for course module 1"
     )
 
     description = String(
         display_name="Description",
         help="What is this badge",
         scope=Scope.settings,
-        default="A Shiny badge, given to exceptional students"
+        default=u"A Shiny badge, given to exceptional students"
     )
 
     section_title = String(
@@ -100,14 +100,14 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     award_message = String(
         display_name='Award message',
-        default='Well done you are an all star!',
+        default=u'Well done you are an all star!',
         scope=Scope.settings,
         help='Message the user will see upon receiving a badge',
     )
 
     motivation_message = String(
         display_name='Motivational message',
-        default = 'Keep trying and learning, never give up.',
+        default = u"Don't worry, you will have another opportunity to earn a badge.",
         scope=Scope.settings,
         help='Message the user will see if they do not quailify for a badge'
     )
@@ -124,7 +124,10 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     # TO-DO: change this view to display your data your own way.
     @XBlock.json_handler
     def new_award_badge(self, data, suffix=''):
-
+        """
+        The json handler which uses the badge service to award
+        a badge.
+        """
         badge_service = self.runtime.service(self, 'badging')
         badge_class = badge_service.get_badge_class(
            slug=self.badge_slug, issuing_component=self.issuer_slug,
@@ -139,6 +142,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         badge_class.award(user)
         badge_assertions = badge_service.assertions_for_user(user=user)
         slug_assertions = badge_service.slug_assertion_for_user(user=user, slug=self.badge_slug)
+
         self.received_award = True
         self.check_earned = True
         self.image_url = slug_assertions[0]['image_url']
@@ -153,6 +157,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         # We may be in the SDK, in which case the username may not really be available.
         return user.opt_attrs.get('edx-platform.username', 'username')
 
+
+    @XBlock.supports("multi_device")
     def student_view(self, context=None):
         """
         The primary view of the BadgerXBlock, shown to students
@@ -162,6 +168,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
         else:
             user = User.objects.get(username=self.current_user_key)
+
         context = {
             'received_award': self.received_award,
             'section_title': self.section_title,
