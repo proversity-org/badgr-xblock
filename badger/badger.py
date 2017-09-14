@@ -157,7 +157,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
     @XBlock.json_handler
-    def no_award_badge(self, data, suffix=''):
+    def no_award_received(self, data, suffix=''):
         """
         The json handler which uses the badge service to deal with no
         badge being earned.
