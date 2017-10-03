@@ -2,6 +2,7 @@
 
 import pkg_resources
 import logging
+import requests
 from django.conf import settings
 from xblock.core import XBlock
 from django.contrib.auth.models import User
@@ -13,6 +14,8 @@ from xblockutils.settings import XBlockWithSettingsMixin
 logger = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
+
+@XBlock.needs('settings')
 @XBlock.wants('badging')
 @XBlock.wants('user')
 class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
@@ -116,6 +119,43 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     editable_fields = ('display_name', 'description', 'criteria', 'issuer_slug','badge_slug', 'pass_mark', 'section_title', 'award_message', 'motivation_message',)
     show_in_read_only_mode = True
  
+
+
+    @property
+    def api_token(self):
+        """
+        Returns the Badgr Server API token from Settings Service.
+        The API key should be set in both lms/cms env.json files inside XBLOCK_SETTINGS.
+        Example:
+            "XBLOCK_SETTINGS": {
+                "BadgerXBlock": {
+                    "BADGR_API_TOKEN": "YOUR API KEY GOES HERE"
+                }
+            },
+        """
+        return self.get_xblock_settings().get('BADGR_API_TOKEN', '')
+
+    @property
+    def api_url(self):
+        """
+        Returns the URL of the Badgr Server from the Settings Service.
+        The URL hould be set in both lms/cms env.json files inside XBLOCK_SETTINGS.
+        Example:
+            "XBLOCK_SETTINGS": {
+                "BadgerXBlock": {
+                    "BADGR_BASE_URL": "YOUR URL  GOES HERE"
+                }
+            },
+        """
+        return self.get_xblock_settings().get('BADGR_BASE_URL' '')
+
+    def get_list_of_issuers(self):
+        """
+        Get a list of issuers from badgr.proversity.org
+        """
+        issuer_list = requests.get('{}/v1/issuer/issuers'.format(self.api_url),  headers={'Authorization': 'token {}'.format(self.api_token)})
+        return issuer_list.json()
+
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
         data = pkg_resources.resource_string(__name__, path)
@@ -206,6 +246,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'award_message': self.award_message,
             'motivation_message': self.motivation_message,
             'course_id':  str(self.runtime.course_id),
+            'badgrApiToken': self.api_token,
+            'badge_slug': self.badge_slug
         })
 
         return frag
@@ -217,6 +259,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         frag = Fragment()
         context = {'fields': []}
+        
         # Build a list of all the fields that can be edited:
         for field_name in self.editable_fields:
             field = self.fields[field_name]
@@ -230,7 +273,9 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 context["fields"].append(field_info)
         frag.content = loader.render_django_template("static/html/badger_edit.html", context)
         frag.add_javascript(loader.load_unicode("static/js/src/badger_edit.js"))
-        frag.initialize_js('StudioEditableXBlockMixin')
+        frag.initialize_js('StudioEditableXBlockMixin', {
+            'badgrApiToken': self.api_token
+        })
         return frag
 
     # TO-DO: change this to create the scenarios you'd like to see in the
