@@ -56,7 +56,7 @@ function BadgerXBlock(runtime, element, data) {
             $('.badge-loader').hide();
             $('#lean_overlay').hide();
             alert(
-                'The modlue named ' + '"'+ section_title + '"' 
+                'The module named ' + '"'+ section_title + '"' 
                 + ' does not exist in the Grades Report! Please check you have' 
                 + ' specified the correct module name for this badge.'
             )

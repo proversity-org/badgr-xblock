@@ -8,7 +8,12 @@
     cursor: pointer;
 }
 
+.badge-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 
+}
 
 .badge-loader {
     position: fixed;
@@ -24,7 +29,6 @@
     animation: spin 2s linear infinite;
 }
 
-
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -34,72 +38,32 @@
 	box-sizing: border-box;
 }
 
-
-.color .red    {background: #fa5a5a;}
-.color .yellow {background: #f0d264;}
-.color .green  {background: #82c8a0;}
-.color .cyan   {background: #7fccde;}
-.color .blue   {background: #6698cb;}
-.color .purple {background: #cb99c5;}
-
-pre {
-	width: 100%;
-	padding: 30px;
-	background-color: rgba(0, 0, 0, 0.72);
-	color: #f8f8f2;
-	border-radius: 0 0 4px 4px;
-	margin-top: 20px;
-  white-space: pre-wrap; /* css-3 */
-  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-  white-space: -pre-wrap; /* Opera 4-6 */
-  white-space: -o-pre-wrap; /* Opera 7 */
-  word-wrap: break-word; /* Internet Explorer 5.5+ */
-}
-pre .bt  {color: #f8f8f2;} /* <> */
-pre .anc {color: #f92672;} /* anchor tag */
-pre .att {color: #a6a926;} /* attribute */
-pre .val {color: #e6db74;} /* value */
-
-.btn-gradient {
-	margin: 5px;
+.btn-default-badger {
+    background: #0075b4;
+    color: #fff;
+    transition: all 0.3s;
 }
 
-.btn.block, 
-.btn-two.block, 
-.btn-gradient.block, 
-.btn-effect.block {
-  display: block;
-  width: 60%;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
-.btn-gradient.large {
-  padding: 15px 45px; 
-  font-size: 22px;
+.btn-default-badger:hover, .btn-default:focus {
+    background: #009ade;
+    color: #fff;
+    box-shadow: none;
 }
 
-
-/* Gradient buttons */
-.btn-gradient {
-	text-decoration: none;
-	color: white;
-	padding: 10px 30px;
-	display: inline-block;
-	position: relative;
-	border: 1px solid rgba(0,0,0,0.21);
-	border-bottom: 4px solid rgba(0,0,0,0.21);
-	border-radius: 4px;
-	text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+.btn-badger {
+    display: block;
+    width: 60%;
+    padding: 10px 30px;;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+    border-radius: 4px;
 }
-/* Gradient - ugly css is ugly */
-.btn-gradient.cyan {
-	background: rgba(27,188,194,1);
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(27,188,194,1)), to(rgba(24,163,168,1)));
-	background: -webkit-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
-	background: -moz-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
-	background: -o-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
-	background: linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1bbcc2', endColorstr='#18a3a8', GradientType=0);
-}
-.btn-gradient.cyan:active 	{background: #169499;}

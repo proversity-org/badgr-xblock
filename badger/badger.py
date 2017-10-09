@@ -48,6 +48,13 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         default=u"test-badge"
     )
 
+    badge_name = String(
+        display_name="Badge display name",
+        help="Badge name that appears in Accomplishments tab",
+        scope=Scope.settings,
+        default=u"Module 1 Badge"
+    )
+
     image_url = String(
         help="The url for the badge image on Badgr server",
         scope=Scope.user_state,
@@ -72,7 +79,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Section title",
         help="See the display name of this section",
         scope=Scope.settings,
-        default="Section"
+        default=u"Section"
     )
 
     pass_mark = Float(
@@ -100,7 +107,6 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help='The user'
     ) 
 
-
     award_message = String(
         display_name='Award message',
         default=u'Well done you are an all star!',
@@ -115,12 +121,38 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help='Message the user will see if they do not quailify for a badge'
     )
 
+    button_text = String(
+        display_name='Button text',
+        default = u"Click here to view your results.",
+        scope=Scope.settings,
+        help='Text appearing on button'
+    )
 
-    editable_fields = ('display_name', 'description', 'criteria', 'issuer_slug','badge_slug', 'pass_mark', 'section_title', 'award_message', 'motivation_message',)
+    button_colour = String(
+        display_name='Button colour',
+        default = u"#0075b4",
+        scope=Scope.settings,
+        help='Colour appearing on button'
+    )
+
+
+    editable_fields = (
+        'display_name',
+        'description',
+        'criteria',
+        'issuer_slug',
+        'badge_slug',
+        'badge_name', 
+        'pass_mark',
+        'section_title',
+        'award_message',
+        'motivation_message',
+        'button_text',
+        'button_colour'
+    )
+
     show_in_read_only_mode = True
  
-
-
     @property
     def api_token(self):
         """
@@ -172,7 +204,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         badge_class = badge_service.get_badge_class(
            slug=self.badge_slug, issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
-            display_name=self.badge_slug,
+            display_name=self.badge_name,
             description=self.description,
             criteria=self.criteria
         )
@@ -230,10 +262,9 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'check_earned': self.check_earned,
             'section_title': self.section_title,
             'image_url': self.image_url,
-            'assertion_url': self.assertion_url,
-            'description': self.description,
-            'criteria': self.criteria,
-            'award_message': self.award_message
+            'award_message': self.award_message,
+            'button_text': self.button_text,
+            'button_colour': self.button_colour
         }
 
         frag = Fragment(loader.render_django_template("static/html/badger.html", context).format(self=self))
