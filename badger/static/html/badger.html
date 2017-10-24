@@ -3,7 +3,7 @@
 <div class="badger_block" id="{{section_title}}">
 	{% if received_award and check_earned%}
 		<p class='badger-award'> {{award_message}} </p>
-		<img class="badge-image" src="{{image_url}}" style="width:350px;height:350px;">
+		<img class="badge-image" src="{{image_url}}">
 	{% else %}
 		<a href="#" id="check-for-badge" class="btn-badger btn-default-badger" style="background: {{button_colour}}">{{button_text}}</a>
 	{% endif %}

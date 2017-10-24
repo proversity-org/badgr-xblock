@@ -22,7 +22,7 @@ def package_data(pkg, roots):
 
 setup(
     name='badger-xblock',
-    version='0.2.1',
+    version='0.2.2',
     description='badger XBlock',   # TODO: write a better description.
     license='UNKNOWN',          # TODO: choose a license: 'AGPL v3' and 'Apache 2.0' are popular.
     packages=[
