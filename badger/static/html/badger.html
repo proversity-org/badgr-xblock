@@ -5,7 +5,9 @@
 		<p class='badger-award'> {{award_message}} </p>
 		<img class="badge-image" src="{{image_url}}">
 	{% else %}
-		<a href="#" id="check-for-badge" class="btn-badger btn-default-badger" style="background: {{button_colour}}">{{button_text}}</a>
+		<div class="action-badger">
+			<a href="#" id="check-for-badge" class="btn-badger btn-default-badger" style="background: {{button_colour}}">{{button_text}}</a>
+		</div>
 	{% endif %}
  <div class='badge-loader' tabindex="1000" role="dialog"></div>
  <div id="results"></div>
