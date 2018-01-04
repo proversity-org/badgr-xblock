@@ -4,10 +4,6 @@
     font-weight: bold;
 }
 
-.badger_block p {
-    cursor: pointer;
-}
-
 .badge-image {
     display: block;
     margin: 0 auto;
