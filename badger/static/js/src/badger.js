@@ -10,6 +10,8 @@ function BadgerXBlock(runtime, element, data) {
     var motivation_message = data.motivation_message;
     var handlerUrl = runtime.handlerUrl(element, 'new_award_badge');
     var noAwardUrl = runtime.handlerUrl(element, 'no_award_received');
+    var onlyUrl = location.href.replace(location.search,'');
+
 
     function getGrades(data) {
         var section_scores = data['section_scores'];
@@ -24,7 +26,9 @@ function BadgerXBlock(runtime, element, data) {
                     data:JSON.stringify({"name": "badger"}),
                     success: function(json) {
                             // Just reload the page, the correct html with the badge will be displayed
-                            location.reload();
+                            var onlyUrl = location.href.replace(location.search,'');
+                            window.location = onlyUrl;
+                            return false;
                     },
                     error : function(xhr,errmsg,err) {
                         $('.badge-loader').hide();
