@@ -135,6 +135,13 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help='Colour appearing on button'
     )
 
+    button_text_colour = String(
+        display_name='Text button colour',
+        default = u"#ffffff",
+        scope=Scope.settings,
+        help='Text colour appearing on button'
+    )
+
 
     editable_fields = (
         'display_name',
@@ -148,7 +155,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         'award_message',
         'motivation_message',
         'button_text',
-        'button_colour'
+        'button_colour',
+        'button_text_colour'
     )
 
     show_in_read_only_mode = True
@@ -264,7 +272,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'image_url': self.image_url,
             'award_message': self.award_message,
             'button_text': self.button_text,
-            'button_colour': self.button_colour
+            'button_colour': self.button_colour,
+            'button_text_colour': self.button_text_colour
         }
 
         frag = Fragment(loader.render_django_template("static/html/badger.html", context).format(self=self))
