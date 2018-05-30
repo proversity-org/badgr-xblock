@@ -46,4 +46,4 @@ Then add your ```xblock``` on ```Advanced Settings``` of the course as ```badger
 * Section title (the name of the subsection for which the badge is awarded, all subsections in a course must have unique names)
 
 
-If you intend to use this xblock whilst having multiple issuers for your Open EdX Instance, then you will need to implement the changes [in this commit](https://github.com/proversity-org/edx-platform/commit/422cd1586044cd462356467d11530522792528d)to the badges app in edx-platform.
+If you intend to use this xblock whilst having multiple issuers for your Open EdX Instance, then you will need to implement the changes [in this commit](https://github.com/proversity-org/edx-platform/commit/422cd1586044cd462356467d11530522792528d) to the badges app in [edx-platform](https://github.com/edx/edx-platform).
