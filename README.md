@@ -1,7 +1,6 @@
-# badger-xblock readme
-## 
+# Badger Xblock
 
-The badger-xblock was developed to work in conjunction with the open source [Badgr Server](https://github.com/concentricsky/badgr-server) application, developed by [Concentric Sky](https://concentricsky.com) .
+The badger-xblock was developed to work in conjunction with the open source [Badgr Server](https://github.com/concentricsky/badgr-server) application or the hosted version at [Badgr.io](https://badgr.io), developed by [Concentric Sky](https://concentricsky.com).
 
 The badger-xblock communicates with the Badgr API, and awards badges based on a passing grade for a specified subsection in a course. 
 
