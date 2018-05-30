@@ -1,19 +1,19 @@
 # badger-xblock readme
 ## 
 
-The badger-xblock was developed to work in conjunction with the open source [Badgr Server](https://github.com/concentricsky/badgr-server) application, developed by [Concentric Sky](https://concentricsky.com) 
+The badger-xblock was developed to work in conjunction with the open source [Badgr Server](https://github.com/concentricsky/badgr-server) application, developed by [Concentric Sky](https://concentricsky.com) .
 
-The badger-xblock communicates and with the Badgr API, and awards badges based on a passing grade for a specified subsection in a course. 
+The badger-xblock communicates with the Badgr API, and awards badges based on a passing grade for a specified subsection in a course. 
 
 
-Visit [Badgr's API Documentation]https://api.badgr.io/docs/v2/) for more information.
+Visit [Badgr's API Documentation](https://api.badgr.io/docs/v2/) for more information.
 
 ## Installation
 ```
 $ sudo su edxapp -s /bin/bash
 $ cd ~ && source edxapp_env
 $ cd /edx/app/edxapp/edx-platform
-$ pip install -U -e git+https://github.com/proversity-org/badger-xblcok#egg=badger-xblock
+$ pip install -U -e git+https://github.com/proversity-org/badger-xblock#egg=badger-xblock
 $ exit && /edx/bin/supervisorctl restart edxapp:
 ```
 
