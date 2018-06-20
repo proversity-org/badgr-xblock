@@ -18,7 +18,7 @@ loader = ResourceLoader(__name__)
 @XBlock.needs('settings')
 @XBlock.wants('badging')
 @XBlock.wants('user')
-class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
+class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     """
     TO-DO: document what your XBlock does.
     """
@@ -31,7 +31,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Display Name",
         help="This name appears in the horizontal navigation at the top of the page.",
         scope=Scope.settings,
-        default=u"Badger"
+        default=u"Badgr"
     )
 
     issuer_slug = String(
@@ -168,7 +168,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The API key should be set in both lms/cms env.json files inside XBLOCK_SETTINGS.
         Example:
             "XBLOCK_SETTINGS": {
-                "BadgerXBlock": {
+                "BadgrXBlock": {
                     "BADGR_API_TOKEN": "YOUR API KEY GOES HERE"
                 }
             },
@@ -182,7 +182,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The URL hould be set in both lms/cms env.json files inside XBLOCK_SETTINGS.
         Example:
             "XBLOCK_SETTINGS": {
-                "BadgerXBlock": {
+                "BadgrXBlock": {
                     "BADGR_BASE_URL": "YOUR URL  GOES HERE"
                 }
             },
@@ -257,7 +257,7 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     @XBlock.supports("multi_device")
     def student_view(self, context=None):
         """
-        The primary view of the BadgerXBlock, shown to students
+        The primary view of the BadgrXBlock, shown to students
         when viewing courses.
         """
         if self.runtime.get_real_user is not None:
@@ -276,10 +276,10 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'button_text_colour': self.button_text_colour
         }
 
-        frag = Fragment(loader.render_django_template("static/html/badger.html", context).format(self=self))
-        frag.add_css(self.resource_string("static/css/badger.css"))
-        frag.add_javascript(self.resource_string("static/js/src/badger.js"))
-        frag.initialize_js('BadgerXBlock', {
+        frag = Fragment(loader.render_django_template("static/html/badgr.html", context).format(self=self))
+        frag.add_css(self.resource_string("static/css/badgr.css"))
+        frag.add_javascript(self.resource_string("static/js/src/badgr.js"))
+        frag.initialize_js('BadgrXBlock', {
             'user': str(user.username),
             'pass_mark': self.pass_mark,
             'section_title': self.section_title,
@@ -311,8 +311,8 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             field_info = self._make_field_info(field_name, field)
             if field_info is not None:
                 context["fields"].append(field_info)
-        frag.content = loader.render_django_template("static/html/badger_edit.html", context)
-        frag.add_javascript(loader.load_unicode("static/js/src/badger_edit.js"))
+        frag.content = loader.render_django_template("static/html/badgr_edit.html", context)
+        frag.add_javascript(loader.load_unicode("static/js/src/badgr_edit.js"))
         frag.initialize_js('StudioEditableXBlockMixin', {
             'badgrApiToken': self.api_token
         })
@@ -324,14 +324,14 @@ class BadgerXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     def workbench_scenarios():
         """A canned scenario for display in the workbench."""
         return [
-            ("BadgerXBlock",
-             """<badger/>
+            ("BadgrXBlock",
+             """<badgr/>
              """),
-            ("Multiple BadgerXBlock",
+            ("Multiple BadgrXBlock",
              """<vertical_demo>
-                <badger/>
-                <badger/>
-                <badger/>
+                <badgr/>
+                <badgr/>
+                <badgr/>
                 </vertical_demo>
              """),
         ]

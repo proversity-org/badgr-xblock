@@ -1,6 +1,6 @@
-/* CSS for BadgerXBlock */
+/* CSS for BadgrXBlock */
 
-.badger_block .count {
+.badgr_block .count {
     font-weight: bold;
 }
 
@@ -31,19 +31,19 @@
 	box-sizing: border-box;
 }
 
-.btn-default-badger {
+.btn-default-badgr {
     background: #0075b4;
     color: #fff;
     transition: all 0.3s;
 }
 
-.btn-default-badger:hover, .btn-default:focus {
+.btn-default-badgr:hover, .btn-default:focus {
     background: #009ade;
     color: #fff;
     box-shadow: none;
 }
 
-.btn-badger {
+.btn-badgr {
     display: inline;
     width: auto;
     padding: 10px 30px;;
@@ -61,7 +61,7 @@
     border-radius: 4px;
 }
 
-.action-badger {
+.action-badgr {
 
     width: 100%;
     text-align: center;

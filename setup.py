@@ -1,4 +1,4 @@
-"""Setup for badger XBlock."""
+"""Setup for badgr XBlock."""
 
 import os
 from setuptools import setup
@@ -21,20 +21,20 @@ def package_data(pkg, roots):
 
 
 setup(
-    name='badger-xblock',
+    name='badgr-xblock',
     version='0.2.3',
-    description='badger XBlock',
+    description='badgr XBlock',
     license='MIT',  
     packages=[
-        'badger',
+        'badgr',
     ],
     install_requires=[
         'XBlock',
     ],
     entry_points={
         'xblock.v1': [
-            'badger = badger:BadgerXBlock',
+            'badgr = badgr:BadgrXBlock',
         ]
     },
-    package_data=package_data("badger", ["static", "public"]),
+    package_data=package_data("badgr", ["static", "public"]),
 )
