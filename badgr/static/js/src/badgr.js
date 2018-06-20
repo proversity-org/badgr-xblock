@@ -1,5 +1,5 @@
-/* Javascript for BadgerXBlock. */
-function BadgerXBlock(runtime, element, data) {
+/* Javascript for BadgrXBlock. */
+function BadgrXBlock(runtime, element, data) {
 
     var user = data.user
     var my_url = '/api/grades/v0/course_grade/' + data.course_id + '/users/?username=' + user
@@ -23,7 +23,7 @@ function BadgerXBlock(runtime, element, data) {
                 $.ajax({
                     type: "POST",
                     url: handlerUrl,
-                    data:JSON.stringify({"name": "badger"}),
+                    data:JSON.stringify({"name": "badgr"}),
                     success: function(json) {
                             // Just reload the page, the correct html with the badge will be displayed
                             var onlyUrl = location.href.replace(location.search,'');
@@ -45,13 +45,13 @@ function BadgerXBlock(runtime, element, data) {
                 $.ajax({
                 type: "POST",
                 url: noAwardUrl,
-                data:JSON.stringify({"name": "badger"}),
+                data:JSON.stringify({"name": "badgr"}),
                 success: function(json) {
                     $('.badge-loader').hide();
                     $('#lean_overlay').hide();
-                    var $motivation = $('<p class="badger-motivation">' 
+                    var $motivation = $('<p class="badgr-motivation">' 
                     + motivation_message + '</p>' );
-                    $('.badger_block').append($motivation);
+                    $('.badgr_block').append($motivation);
                     $('#check-for-badge').remove();
                     }
                 });
